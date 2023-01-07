@@ -67,6 +67,7 @@ Future<Duration?> playWordSound(
   // audioPlayer.play(DeviceFileSource(file.path));
   // var player = AudioPlayer();
   await player.play(UrlSource(url),volume: 1);
+  // await player.play(DeviceFileSource(file.path),volume: 1);
 }
 
 Future<Duration?> playSentenceSound(
