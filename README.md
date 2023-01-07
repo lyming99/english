@@ -1,4 +1,4 @@
-# 背单词方法分享 
+# 晨晨单词
 一拆二读三理解，
 三轮三回三默写；
 记忆曲线定期背，
@@ -19,3 +19,5 @@
 - 单词采集：百度、github
 - 语音播放：百度语音
 - 开发框架：flutter
+
+测试版本下载链接：[app-release.apk](https://github.com/lyming99/english/releases/download/1.0/app-release.apk)
