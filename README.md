@@ -4,6 +4,8 @@
 记忆曲线定期背，
 艾宾浩斯夸你会。
 
+[B站学习视频](https://www.bilibili.com/video/BV1g24y1e7pt?share_source=copy_web)
+
 ## 一、原理
 
 艾宾浩斯-记忆曲线
