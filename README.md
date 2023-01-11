@@ -26,4 +26,4 @@
 - 语音播放：百度语音
 - 开发框架：flutter
 
-测试版本下载链接：[app-release.apk](https://github.com/lyming99/english/releases/download/1.0/app-release.apk)
+测试版本下载链接：[app-release.apk](https://github.com/lyming99/english/releases/download/1.1/app-release.apk)
