@@ -58,16 +58,17 @@ Future<Duration?> playWordSound(
   String? word,
   int? type,
 ) async {
-  var url =
-      "https://fanyi.baidu.com/gettts?lan=${type == 1 ? "uk" : "en"}&text=$word&spd=3&source=web";
+  // var url =
+  //     "https://fanyi.baidu.com/gettts?lan=${type == 1 ? "uk" : "en"}&text=$word&spd=3&source=web";
   // var tempDir = await getApplicationSupportDirectory();
   // Directory("${tempDir.path}/wordVoice").createSync();
   // var file = File("${tempDir.path}/wordVoice/$word$type");
   // await Dio().download(url, file.path);
   // audioPlayer.play(DeviceFileSource(file.path));
   // var player = AudioPlayer();
-  await player.play(UrlSource(url),volume: 1);
+  // await player.play(UrlSource(url),volume: 1);
   // await player.play(DeviceFileSource(file.path),volume: 1);
+  return await playSentenceSound(word,type: type??1);
 }
 
 Future<Duration?> playSentenceSound(
@@ -84,7 +85,7 @@ Future<Duration?> playSentenceSound(
   var file = File("${tempDir.path}/sentenceVoice/$sentence$type");
   await Dio().download(url, file.path);
   // var player = AudioPlayer();
-  player.play(DeviceFileSource(file.path));
+  await player.play(DeviceFileSource(file.path));
 }
 
 void stopPlaySound() {
