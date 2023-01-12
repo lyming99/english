@@ -21,6 +21,13 @@ class StudyPage extends GetView<StudyController> {
     return Stack(
       children: [
         Container(
+          child: GestureDetector(
+            onDoubleTap: () {
+              controller.next();
+            },
+          ),
+        ),
+        Container(
           padding: EdgeInsets.symmetric(
             horizontal: 10,
             vertical: 10,
@@ -36,62 +43,103 @@ class StudyPage extends GetView<StudyController> {
         //PASS 按钮
         Align(
           alignment: Alignment.bottomCenter,
-          child: Container(
-            child: Obx(() {
-              return Container(
-                margin: const EdgeInsets.only(bottom: 100.0),
-                width: 100,
-                height: 100,
-                child: controller.thinking.value == true ||
-                        controller.playing.value == false
-                    ? null
-                    : Ink(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          boxShadow: [
-                            BoxShadow(
-                              blurStyle: BlurStyle.outer,
-                              blurRadius: 10,
-                              color: Colors.green.withOpacity(0.2),
-                            )
-                          ],
-                        ),
-                        child: InkWell(
-                            borderRadius: BorderRadius.circular(100),
-                            onTap: controller.controlEnable.value &&
-                                    controller.thinking.value == false
-                                ? () {
-                                    controller.pass();
-                                  }
-                                : null,
-                            child: Container(
-                              decoration: BoxDecoration(),
-                              padding: EdgeInsets.all(10),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.check,
-                                    color: controller.thinking.value == false
-                                        ? Colors.black12
-                                        : Colors.black12,
-                                    size: 50,
-                                  ),
-                                  Text(
-                                    "PASS",
-                                    style: TextStyle(
-                                      color: Colors.black12,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )),
+          child: Obx(() {
+            if (controller.thinking.value == true ||
+                controller.playing.value == false) return Container();
+            return Container(
+              margin: const EdgeInsets.only(bottom: 100.0, left: 50, right: 50),
+              width: 100,
+              height: 100,
+              child: Ink(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  boxShadow: [
+                    BoxShadow(
+                      blurStyle: BlurStyle.outer,
+                      blurRadius: 10,
+                      color: Colors.green.withOpacity(0.2),
+                    )
+                  ],
+                ),
+                child: InkWell(
+                    borderRadius: BorderRadius.circular(100),
+                    onTap: controller.controlEnable.value
+                        ? () {
+                            controller.pass();
+                          }
+                        : null,
+                    child: Container(
+                      decoration: BoxDecoration(),
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.check,
+                            color: controller.thinking.value == false
+                                ? Colors.black12
+                                : Colors.black12,
+                            size: 50,
+                          ),
+                          Text(
+                            "PASS",
+                            style: TextStyle(
+                              color: Colors.black12,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       ),
-              );
-            }),
-          ),
+                    )),
+              ),
+            );
+          }),
         ),
+        //delete
+        Align(
+          alignment: Alignment.topRight,
+          child: Obx(() {
+            return Container(
+              margin:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
+              width: 36,
+              height: 36,
+              child: Ink(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(100),
+                  boxShadow: [
+                    BoxShadow(
+                      blurStyle: BlurStyle.outer,
+                      blurRadius: 10,
+                      color: Colors.green.withOpacity(0.2),
+                    )
+                  ],
+                ),
+                child: InkWell(
+                    borderRadius: BorderRadius.circular(100),
+                    onTap: controller.controlEnable.value &&
+                            controller.thinking.value == false
+                        ? () {
+                            //删除单词
+                            controller.delete();
+                          }
+                        : null,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.delete_outline_rounded,
+                        color: controller.thinking.value == false
+                            ? Colors.red
+                            : Colors.red,
+                        size: 24,
+                      ),
+                    )),
+              ),
+            );
+          }),
+        ),
+
         //PASS 数据
         Align(
           alignment: Alignment.bottomLeft,
@@ -980,41 +1028,19 @@ class StudyPage extends GetView<StudyController> {
       controller.stopPlay();
     }
     Get.put(WordListController());
-    await showSlidingBottomSheet(context, builder: (context) {
-      return SlidingSheetDialog(
-          elevation: 8,
-          cornerRadius: 16,
-          duration: Duration(milliseconds: 300),
-          snapSpec: const SnapSpec(
-            snap: true,
-            snappings: [ 0.5, 1.0],
-            positioning: SnapPositioning.relativeToSheetHeight,
-          ),
-          headerBuilder: (context,state){
-            return Container(child: Text("header "),);
-          },
-          builder: (context, state) {
-            var size = MediaQuery.of(context).size;
-            var top = MediaQuery.of(context).padding.top + kToolbarHeight;
+    await showMaterialModalBottomSheet(
+        context: context,
+        expand: true,
+        bounce: false,
 
-            return Container(
-              height: size.height - top,
-              width: size.width,
-              child: buildWordListView(context),
-            );
-          });
-    });
-    // await showMaterialModalBottomSheet(
-    //     context: context,
-    //     expand: true,
-    //     bounce: false,
-    //     useRootNavigator: true,
-    //     duration: const Duration(
-    //       milliseconds: 300,
-    //     ),
-    //     builder: (context) {
-    //       return buildWordListView(context);
-    //     });
+        useRootNavigator: true,
+        backgroundColor: Colors.transparent,
+        duration: const Duration(
+          milliseconds: 300,
+        ),
+        builder: (context) {
+          return buildWordListView(context);
+        });
 
     Get.delete<WordListController>();
 
@@ -1035,88 +1061,117 @@ class WordListView extends GetView<WordListController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0,
-        leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: Icon(
-              Icons.keyboard_arrow_down_outlined,
-              size: 32,
-            )),
-        title: Obx(
-          () => Text(
-            controller.title.value,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.normal,
-            ),
+    var size = MediaQuery.of(context).size;
+
+    return Container(
+      margin: EdgeInsets.only(top: 100),
+      child: Material(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+        child: Container(
+          child: Column(
+            children: [
+              Container(
+                height: 50,
+                decoration: BoxDecoration(
+                    // border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
+                    ),
+                child: Stack(
+                  children: [
+                    Align(
+                        alignment: Alignment.center,
+                        child: Obx(() => Center(
+                              child: Container(
+                                child: Text(
+                                  controller.title.value,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ))),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        margin: EdgeInsets.only(right: 10),
+                        child: IconButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          icon: Icon(Icons.close),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Stack(
+                  children: [
+                    PageView.builder(
+                        itemCount: 3,
+                        controller: controller.pageController,
+                        onPageChanged: (index) {
+                          controller.onPageChanged(index);
+                        },
+                        itemBuilder: (context, index) {
+                          //1.播放列表
+                          //2.已学习
+                          //3.熟词(已删除)
+                          return ListView.builder(
+                            itemCount: 100,
+                            shrinkWrap: true,
+                            padding: EdgeInsets.only(bottom: 50),
+                            itemBuilder: (ctx, index) {
+                              return ListTile(
+                                title: Text("hello"),
+                              );
+                            },
+                            physics: BouncingScrollPhysics(),
+                          );
+                        }),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Obx(
+                        () => Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            for (var i = 0; i < 3; i++)
+                              Container(
+                                width: 10,
+                                height: 10,
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                  vertical: 10,
+                                ),
+                                decoration: controller.pageIndex.value == i
+                                    ? BoxDecoration(
+                                        color: Colors.purple.withOpacity(0.8),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      )
+                                    : BoxDecoration(
+                                        border: Border.all(
+                                            color:
+                                                Colors.purple.withOpacity(0.8)),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                              )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-        centerTitle: false,
-        systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
-            statusBarColor: Colors.transparent,
-            systemNavigationBarColor: Colors.transparent),
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        foregroundColor: Colors.black,
-      ),
-      body: Stack(
-        children: [
-          PageView.builder(
-              itemCount: 3,
-              controller: controller.pageController,
-              onPageChanged: (index) {
-                controller.onPageChanged(index);
-              },
-              itemBuilder: (context, index) {
-                //1.播放列表
-                //2.已学习
-                //3.熟词(已删除)
-                return ListView.builder(
-                  itemCount: 100,
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(bottom: 50),
-                  itemBuilder: (ctx, index) {
-                    return ListTile(
-                      title: Text("hello"),
-                    );
-                  },
-                  physics: const NeverScrollableScrollPhysics(),
-                );
-              }),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Obx(
-              () => Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (var i = 0; i < 3; i++)
-                    Container(
-                      width: 10,
-                      height: 10,
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 5,
-                        vertical: 10,
-                      ),
-                      decoration: controller.pageIndex.value == i
-                          ? BoxDecoration(
-                              color: Colors.purple.withOpacity(0.8),
-                              borderRadius: BorderRadius.circular(100),
-                            )
-                          : BoxDecoration(
-                              border: Border.all(
-                                  color: Colors.purple.withOpacity(0.8)),
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                    )
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

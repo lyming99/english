@@ -77,13 +77,19 @@ Future<Duration?> playSentenceSound(
   String le = "eng",
 }) async {
   sentence = sentence ?? "";
+  print('$sentence');
+  sentence=sentence.replaceAll("</b>", "");
+  sentence=sentence.replaceAll("<b>", "");
   sentence = Uri.encodeComponent(sentence);
+  print('$sentence');
   var url =
       "https://dict.youdao.com/dictvoice?audio=${sentence}&type=$type&le=$le";
   var tempDir = await getApplicationSupportDirectory();
   Directory("${tempDir.path}/sentenceVoice").createSync();
   var file = File("${tempDir.path}/sentenceVoice/$sentence$type");
-  await Dio().download(url, file.path);
+  if (!file.existsSync()) {
+    await Dio().download(url, file.path);
+  }
   // var player = AudioPlayer();
   await player.play(DeviceFileSource(file.path));
 }

@@ -38,11 +38,15 @@ class StudyService {
     }
     //如果长度还是不够，这查询新词
     var studyCount =
-        await wordDao.queryDailyFetchWordCount(appService.bookId) ?? 0;
-    if (studyCount < appService.dailyWantCount) {
+        await wordDao.queryDailyStudyCount(appService.bookId) ?? 0;
+    var dailyWantCount=appService.dailyWantCount;
+    if(dailyWantCount==-1) {
+      dailyWantCount = 100000;
+    }
+    if (studyCount < dailyWantCount) {
       if (studying.length < studyQueueMaxCount) {
         var count = studyQueueMaxCount - studying.length;
-        var countMax = appService.dailyWantCount - studyCount;
+        var countMax = dailyWantCount - studyCount;
         count = min(countMax, count);
         var studyWords =
             await wordDao.queryNotStudyWords(appService.bookId, count);
@@ -111,7 +115,7 @@ class StudyService {
     //查询新词
     //判断
     var studyCount =
-        await wordDao.queryDailyFetchWordCount(appService.bookId) ?? 0;
+        await wordDao.queryDailyStudyCount(appService.bookId) ?? 0;
     if (studyCount < appService.dailyWantCount) {
       var studyWords = await wordDao.queryNotStudyWords(appService.bookId, 1);
       for (var word in studyWords) {
@@ -136,10 +140,20 @@ class StudyService {
       status.status = 1;
       var cycle = status.studyCycle ?? 0;
       var timeSpan =
-          appService.reviewTimes[min(cycle, appService.reviewTimes.length - 1)];
+      appService.reviewTimes[min(cycle, appService.reviewTimes.length - 1)];
       status.studyCycle = cycle + 1;
       var currentTime = DateTime.now().millisecondsSinceEpoch;
       status.nextReviewTime = currentTime + timeSpan;
+      status.updateTime = currentTime;
+      await wordDao.updateStatus(status);
+    }
+  }
+  Future<void> delete(String word) async {
+    var status = await wordDao.queryWordStatus(word);
+    if (status != null) {
+      //将当前单词状态设置为-1(删除)
+      status.status = -1;
+      var currentTime = DateTime.now().millisecondsSinceEpoch;
       status.updateTime = currentTime;
       await wordDao.updateStatus(status);
     }

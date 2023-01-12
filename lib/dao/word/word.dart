@@ -72,22 +72,24 @@ abstract class WordDao {
     return count;
   }
 
-  Future<int?> queryStudyWordCount(int wordBook) async {
+  ///查询学习进度数量，包含删除的数量
+  Future<int?> queryProgressWordCount(int wordBook) async {
     var count = await queryAdapter.query(
         '''select count(0) as count from  word_status status
         left join  word word  on status.word = word.word
-         where word.book=?1 and (status.status=1 or (status.studyCycle>0))
+         where word.book=?1 and (status.status=1 or (status.studyCycle>0) or status.status=-1)
         ''',
         mapper: (Map<String, Object?> row) => row['count'] as int?,
         arguments: [wordBook]);
     return count;
   }
 
-  Future<int?> queryDailyStudyWordCount(int wordBook) async {
+  ///查询日常学习数量（进入周期一以上的单词，周期0删除不算，周期0删除代表本来就会的单词）
+  Future<int?> queryDailyPassWordCount(int wordBook) async {
     var count = await queryAdapter.query(
         '''select count(0) as count from  word_status status
         left join  word word  on status.word = word.word
-         where word.book=?1 and (status.status=1 or (status.studyCycle>0))
+         where word.book=?1 and (status.status=1 or status.studyCycle>0)
          and createTime > ${getDayStartTime()}
         ''',
         mapper: (Map<String, Object?> row) => row['count'] as int?,
@@ -95,11 +97,12 @@ abstract class WordDao {
     return count;
   }
 
-  Future<int?> queryDailyFetchWordCount(int wordBook) async {
+  ///查询今日学习的数量，包括没有pass的，但不包括删除的
+  Future<int?> queryDailyStudyCount(int wordBook) async {
     var count = await queryAdapter.query(
         '''select count(0) as count from  word_status status
         left join  word word  on status.word = word.word
-         where word.book=?1 and createTime > ${getDayStartTime()}
+         where word.book=?1 and createTime > ${getDayStartTime()} and status.status!=-1
         ''',
         mapper: (Map<String, Object?> row) => row['count'] as int?,
         arguments: [wordBook]);
@@ -110,7 +113,7 @@ abstract class WordDao {
     var count = await queryAdapter.query(
         '''
           select count(0) as count from word_status  
-           where studyCycle>0 and nextReviewTime < ${DateTime.now().millisecondsSinceEpoch}
+           where studyCycle>0 and nextReviewTime < ${DateTime.now().millisecondsSinceEpoch} and status!=-1
         ''',
         mapper: (Map<String, Object?> row) => row['count'] as int?,
         arguments: []);

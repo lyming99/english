@@ -56,9 +56,9 @@ class HomeController extends GetxController {
       wordCount: "词汇量:${appService.wordService.bookMap[appService.bookName]?.words?.length}",
     );
     var allCount = await wordDao.queryWordCount(appService.bookId);
-    var studyCount = await wordDao.queryStudyWordCount(appService.bookId);
-    var dailyCount = await wordDao.queryDailyStudyWordCount(appService.bookId);
-    progress.value = "$studyCount/$allCount";
+    var progressCount = await wordDao.queryProgressWordCount(appService.bookId);
+    var dailyCount = await wordDao.queryDailyPassWordCount(appService.bookId);
+    progress.value = "$progressCount/$allCount";
     dailyWordCount.value = dailyCount ?? 0;
     var reviewCount = await wordDao.queryReviewWordCount();
     this.reviewCount.value = reviewCount ?? 0;

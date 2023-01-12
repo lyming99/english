@@ -2,11 +2,13 @@ import 'package:english/entity/word/vo/word.dart';
 import 'package:flutter/material.dart';
 
 class WordSentence extends StatelessWidget {
-  String ?sentence;
+  String? sentence;
+  bool? showVoice;
 
   WordSentence({
     Key? key,
-     this.sentence,
+    this.sentence,
+    this.showVoice,
   }) : super(key: key);
 
   @override
@@ -14,6 +16,14 @@ class WordSentence extends StatelessWidget {
     //例句，下划线，单词卡片按钮
     var example = sentence ?? "";
     var spans = <InlineSpan>[];
+    if (this.showVoice == true) {
+      spans.add(WidgetSpan(
+          child: Icon(
+            Icons.volume_down_outlined,
+            size: 24,
+            color: Colors.grey,
+          )));
+    }
     var pos = 0;
     for (;;) {
       var wordStart = example.indexOf("<b>", pos);
@@ -36,12 +46,14 @@ class WordSentence extends StatelessWidget {
           )));
       pos = wordEnd + 4;
     }
+
     spans.add(TextSpan(
         text: example.substring(pos),
         style: TextStyle(
           color: Colors.black54,
           fontSize: 16,
         )));
+
     return LayoutBuilder(builder: (context, cons) {
       return Container(
         child: RichText(

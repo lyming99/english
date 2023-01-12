@@ -372,6 +372,25 @@ class StudyController extends GetxController with WidgetsBindingObserver {
     controlEnable.value = true;
   }
 
+  void delete() async {
+    if (!controlEnable.value) {
+      return;
+    }
+    controlEnable.value = false;
+    await stopPlay();
+    var word = this.word.value?.wordId;
+    if (word != null) {
+      await studyService.delete(word);
+      playingWords.removeAt(playingIndex);
+      if (playingWords.isEmpty) {
+        await fetchWords();
+      }
+    }
+    await startPlay();
+    await fetchCount();
+    controlEnable.value = true;
+  }
+
   void togglePlay() async {
     if (playing.value) {
       await stopPlay();
@@ -381,7 +400,7 @@ class StudyController extends GetxController with WidgetsBindingObserver {
   }
 
   Future<void> fetchCount() async {
-    var dailyCount = await wordDao.queryDailyStudyWordCount(appService.bookId);
+    var dailyCount = await wordDao.queryDailyPassWordCount(appService.bookId);
     dailyStudyCount.value = dailyCount ?? 0;
     var reviewCount = await wordDao.queryReviewWordCount();
     this.reviewCount.value = reviewCount ?? 0;
@@ -398,7 +417,4 @@ class StudyController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  void showWordList() {
-
-  }
 }

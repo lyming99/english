@@ -35,14 +35,12 @@ class WordView extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(
-                  child: Text(
-                    "${word?.word}",
-                    style: TextStyle(
-                      fontSize: 32,
-                      color: Colors.deepOrangeAccent,
-                      fontWeight: FontWeight.bold,
-                    ),
+                Text(
+                  "${word?.word}",
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: Colors.deepOrangeAccent,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 if (cycle > 0)
@@ -193,6 +191,7 @@ class WordView extends StatelessWidget {
                         },
                         child: WordSentence(
                           sentence: word?.sentence,
+                          // showVoice: true,
                         ),
                       ),
                     ),
