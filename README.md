@@ -23,7 +23,7 @@
 ## 三、软件研发
 
 - 单词采集：百度、github
-- 语音播放：百度语音
+- 语音播放：有道翻译语音
 - 开发框架：flutter
 
-测试版本下载链接：[app-release.apk](https://github.com/lyming99/english/releases/download/1.1/app-release.apk)
+测试版本下载链接：[app-release1.2.apk](https://github.com/lyming99/english/releases/download/1.2/app-release.apk)
