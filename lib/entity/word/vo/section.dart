@@ -11,8 +11,8 @@ class SectionVO {
   SectionVO({
     required this.section,
     required this.wordList,
+    required this.words,
     required this.studyIndex,
     required this.review,
-    required this.words,
   });
 }

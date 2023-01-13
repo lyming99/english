@@ -381,11 +381,8 @@ class StudyController extends GetxController with WidgetsBindingObserver {
     var word = this.word.value?.wordId;
     if (word != null) {
       await studyService.delete(word);
-      playingWords.removeAt(playingIndex);
-      if (playingWords.isEmpty) {
-        await fetchWords();
-      }
     }
+    await fetchNextWord(playingIndex);
     await startPlay();
     await fetchCount();
     controlEnable.value = true;

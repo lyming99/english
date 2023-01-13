@@ -1032,7 +1032,7 @@ class StudyPage extends GetView<StudyController> {
         context: context,
         expand: true,
         bounce: false,
-
+        closeProgressThreshold: 0.95,
         useRootNavigator: true,
         backgroundColor: Colors.transparent,
         duration: const Duration(
@@ -1061,117 +1061,131 @@ class WordListView extends GetView<WordListController> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
     return Container(
-      margin: EdgeInsets.only(top: 100),
-      child: Material(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        child: Container(
-          child: Column(
-            children: [
-              Container(
-                height: 50,
-                decoration: BoxDecoration(
-                    // border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
-                    ),
-                child: Stack(
-                  children: [
-                    Align(
-                        alignment: Alignment.center,
-                        child: Obx(() => Center(
-                              child: Container(
-                                child: Text(
-                                  controller.title.value,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ))),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: IconButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          icon: Icon(Icons.close),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Stack(
-                  children: [
-                    PageView.builder(
-                        itemCount: 3,
-                        controller: controller.pageController,
-                        onPageChanged: (index) {
-                          controller.onPageChanged(index);
-                        },
-                        itemBuilder: (context, index) {
-                          //1.播放列表
-                          //2.已学习
-                          //3.熟词(已删除)
-                          return ListView.builder(
-                            itemCount: 100,
-                            shrinkWrap: true,
-                            padding: EdgeInsets.only(bottom: 50),
-                            itemBuilder: (ctx, index) {
-                              return ListTile(
-                                title: Text("hello"),
-                              );
-                            },
-                            physics: BouncingScrollPhysics(),
-                          );
-                        }),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Obx(
-                        () => Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            for (var i = 0; i < 3; i++)
-                              Container(
-                                width: 10,
-                                height: 10,
-                                margin: EdgeInsets.symmetric(
-                                  horizontal: 5,
-                                  vertical: 10,
-                                ),
-                                decoration: controller.pageIndex.value == i
-                                    ? BoxDecoration(
-                                        color: Colors.purple.withOpacity(0.8),
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                      )
-                                    : BoxDecoration(
-                                        border: Border.all(
-                                            color:
-                                                Colors.purple.withOpacity(0.8)),
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                      ),
-                              )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+      child: Column(
+        children: [
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              height: 100,
+            ),
+            onTap: () {
+              Get.back();
+            },
           ),
-        ),
+          Expanded(
+            child: Material(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+              child: Container(
+                child: Column(
+                  children: [
+                    Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                          // border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
+                          ),
+                      child: Stack(
+                        children: [
+                          Align(
+                              alignment: Alignment.center,
+                              child: Obx(() => Center(
+                                    child: Container(
+                                      child: Text(
+                                        controller.title.value,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ))),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: IconButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                icon: Icon(Icons.close),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Stack(
+                        children: [
+                          PageView.builder(
+                              itemCount: 3,
+                              controller: controller.pageController,
+                              onPageChanged: (index) {
+                                controller.onPageChanged(index);
+                              },
+                              itemBuilder: (context, index) {
+                                //1.播放列表
+                                //2.已学习
+                                //3.熟词(已删除)
+                                return ListView.builder(
+                                  itemCount: 100,
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.only(bottom: 50),
+                                  itemBuilder: (ctx, index) {
+                                    return ListTile(
+                                      title: Text("bug"),
+                                    );
+                                  },
+                                  physics: BouncingScrollPhysics(),
+                                );
+                              }),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Obx(
+                              () => Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  for (var i = 0; i < 3; i++)
+                                    Container(
+                                      width: 10,
+                                      height: 10,
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 5,
+                                        vertical: 10,
+                                      ),
+                                      decoration: controller.pageIndex.value ==
+                                              i
+                                          ? BoxDecoration(
+                                              color: Colors.grey
+                                                  .withOpacity(0.8),
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                            )
+                                          : BoxDecoration(
+                                              border: Border.all(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.8)),
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                            ),
+                                    )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

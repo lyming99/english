@@ -45,19 +45,17 @@ class AppService {
     return [
       5 * minutes, //5分钟
       25 * minutes, //30分钟
-      30 * minutes, //1小时
-      22 * hour, //1天
-      1 * day, //2天
-      2 * day, //4天
-      3 * day, //7天
-      8 * day, //15天
-      15 * day, //30天
+      12*60 * minutes, //12小时
+      1 * day, //1天
+      2 * day, //2天
+      4 * day, //4天
+      7 * day, //7天
+      15 * day, //15天
       month, //1月
       2 * month, //2月
       4 * month, //4月
-      8 * month, //8月
-      16 * month, //16月
-      32 * month, //32月
+      7 * month, //7月
+      15 * month, //15月
     ];
   }
 

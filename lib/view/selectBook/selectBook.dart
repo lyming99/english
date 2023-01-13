@@ -53,7 +53,6 @@ class SelectBookPage extends GetView<SelectBookController> {
           var bookName = controller.bookNames[index];
           var bookInfo = controller.bookInfo[bookName];
           var book = controller.bookMap[bookName];
-          print('$book');
           return ListTile(
             title: Column(
               mainAxisAlignment: MainAxisAlignment.center,

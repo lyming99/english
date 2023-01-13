@@ -143,9 +143,7 @@ abstract class WordDao {
 
   Future<void> addWords(List<WordPO> words) async {
     var batch = database.batch();
-    // var id = 100000;
     for (var word in words) {
-      // id++;
       batch.insert("word", {
         "word": word.word,
         "book": word.book,
