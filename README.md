@@ -8,9 +8,6 @@
 
 **艾宾浩斯夸你会。**
 
-[哔哩哔哩-单词学习方法视频](https://www.bilibili.com/video/BV1g24y1e7pt?share_source=copy_web)
-
-[记忆方法升级-快播记忆法视频](https://www.bilibili.com/video/BV1NG4y1C7RA?share_source=copy_web)
 
 ## 一、原理
 
@@ -21,6 +18,10 @@
 ## 二、背诵方法
 
 根据记忆曲线定制背诵计划，定期背诵，定期复习。
+
+[哔哩哔哩-单词学习方法视频](https://www.bilibili.com/video/BV1g24y1e7pt?share_source=copy_web)
+
+[记忆方法升级-快播记忆法视频](https://www.bilibili.com/video/BV1NG4y1C7RA?share_source=copy_web)
 
 ## 三、软件研发
 
