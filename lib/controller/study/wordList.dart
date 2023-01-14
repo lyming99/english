@@ -1,5 +1,6 @@
 import 'package:english/controller/app/app.dart';
 import 'package:english/controller/study/study.dart';
+import 'package:english/service/study/study.dart';
 import 'package:english/service/word/word.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -33,6 +34,7 @@ class WordListController extends GetxController {
     WordService wordService = Get.find();
     allList.value =
         wordService.wordMap.values.map((e) => e.word ?? "").toList();
+    onPageChanged(pageIndex.value);
   }
 
   @override
@@ -48,18 +50,19 @@ class WordListController extends GetxController {
 
   void onPageChanged(int index) {
     pageIndex.value = index;
+    StudyController studyService = Get.find();
     switch (index) {
       case 0:
-        title.value = "播放列表";
+        title.value = "播放列表 · ${studyService.playingWords.length}";
         break;
       case 1:
-        title.value = "已学习(PASS)";
+        title.value = "已学习(PASS) · ${passList.value.length}";
         break;
       case 2:
-        title.value = "熟词(已删除)";
+        title.value = "熟词(已删除) · ${deleteList.value.length}";
         break;
       case 3:
-        title.value = "全部单词";
+        title.value = "全部单词 · ${allList.value.length}";
         break;
     }
   }
