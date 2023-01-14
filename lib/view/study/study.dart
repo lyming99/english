@@ -1161,7 +1161,7 @@ class WordListView extends GetView<WordListController> {
                               () => Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  for (var i = 0; i < 3; i++)
+                                  for (var i = 0; i < 4; i++)
                                     Container(
                                       width: 10,
                                       height: 10,
