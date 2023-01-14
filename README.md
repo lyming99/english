@@ -28,4 +28,4 @@
 - 语音播放：有道翻译语音
 - 开发框架：flutter
 
-测试版本下载链接：[app-release1.2.apk](https://github.com/lyming99/english/releases/download/1.2/app-release.apk)
+测试版本下载链接：[app-release1.3.apk](https://github.com/lyming99/english/releases/download/1.3/app-release.apk)
