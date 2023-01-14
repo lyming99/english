@@ -119,7 +119,7 @@ abstract class WordDao {
 
   Future<int?> queryDailyPassWordCount() async {
     var count = await queryAdapter.query(
-        '''select count(0) as count from  word_status status
+        '''select count(distinct word.word) as count from  word_status status
         left join  word word  on status.word = word.word
          where (status.status=1 or (status.studyCycle>0 and status.status!=-1))
          and createTime > ${getDayStartTime()}
@@ -133,7 +133,7 @@ abstract class WordDao {
     var count = await queryAdapter.query(
         '''select count(0) as count from  word_status status
         left join  word word  on status.word = word.word
-         where word.book=?1 and createTime > ${getDayStartTime()} and status.status!=-1
+         where word.book=?1 and createTime > ${getDayStartTime()} and status.status!=-1 and status.status is not null
         ''',
         mapper: (Map<String, Object?> row) => row['count'] as int?,
         arguments: [wordBook]);
