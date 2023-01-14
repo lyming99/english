@@ -1,3 +1,6 @@
+import 'package:english/controller/app/app.dart';
+import 'package:english/controller/study/study.dart';
+import 'package:english/service/word/word.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -5,17 +8,36 @@ class WordListController extends GetxController {
   var pageController = PageController();
   var pageIndex = 0.obs;
   var title = "播放列表".obs;
+  var passList = Rx(<String>[]);
+  var deleteList = Rx(<String>[]);
+  var allList = Rx(<String>[]);
 
   @override
   void onInit() {
     super.onInit();
-    print('word list on init.');
+    fetchWordList();
+  }
+
+  void fetchWordList() async {
+    AppController app = Get.find();
+    StudyController study = Get.find();
+    var passList =
+        await app.appService.wordDao.queryBookPassWord(app.appService.bookId);
+    this.passList.value =
+        passList.map((e) => study.appService.getWord(e)?.word ?? "").toList();
+
+    var deleteList =
+        await app.appService.wordDao.queryBookDeleteWord(app.appService.bookId);
+    this.deleteList.value =
+        deleteList.map((e) => study.appService.getWord(e)?.word ?? "").toList();
+    WordService wordService = Get.find();
+    allList.value =
+        wordService.wordMap.values.map((e) => e.word ?? "").toList();
   }
 
   @override
   void onReady() {
     super.onReady();
-    print('word list on ready.');
   }
 
   @override
@@ -35,6 +57,9 @@ class WordListController extends GetxController {
         break;
       case 2:
         title.value = "熟词(已删除)";
+        break;
+      case 3:
+        title.value = "全部单词";
         break;
     }
   }

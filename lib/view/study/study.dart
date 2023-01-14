@@ -3,6 +3,7 @@ import 'package:bottom_picker/resources/arrays.dart';
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:english/controller/study/wordList.dart';
 import 'package:english/entity/word/vo/word.dart';
+import 'package:english/service/word/word.dart';
 import 'package:english/view/review/list.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -1067,7 +1068,7 @@ class WordListView extends GetView<WordListController> {
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             child: Container(
-              height: 100,
+              height: MediaQuery.of(context).size.height/5,
             ),
             onTap: () {
               Get.back();
@@ -1092,15 +1093,13 @@ class WordListView extends GetView<WordListController> {
                           Align(
                               alignment: Alignment.center,
                               child: Obx(() => Center(
-                                    child: Container(
-                                      child: Text(
-                                        controller.title.value,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.center,
+                                    child: Text(
+                                      controller.title.value,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ))),
                           Align(
@@ -1122,7 +1121,7 @@ class WordListView extends GetView<WordListController> {
                       child: Stack(
                         children: [
                           PageView.builder(
-                              itemCount: 3,
+                              itemCount: 4,
                               controller: controller.pageController,
                               onPageChanged: (index) {
                                 controller.onPageChanged(index);
@@ -1131,6 +1130,19 @@ class WordListView extends GetView<WordListController> {
                                 //1.播放列表
                                 //2.已学习
                                 //3.熟词(已删除)
+                                //4.全部
+                                if (index == 0) {
+                                  return buildPlayList(context);
+                                }
+                                if (index == 1) {
+                                  return buildPassList(context);
+                                }
+                                if (index == 2) {
+                                  return buildDeleteList(context);
+                                }
+                                if (index == 3) {
+                                  return buildAllList(context);
+                                }
                                 return ListView.builder(
                                   itemCount: 100,
                                   shrinkWrap: true,
@@ -1155,13 +1167,13 @@ class WordListView extends GetView<WordListController> {
                                       height: 10,
                                       margin: EdgeInsets.symmetric(
                                         horizontal: 5,
-                                        vertical: 10,
+                                        vertical: 30,
                                       ),
                                       decoration: controller.pageIndex.value ==
                                               i
                                           ? BoxDecoration(
-                                              color: Colors.grey
-                                                  .withOpacity(0.8),
+                                              color:
+                                                  Colors.grey.withOpacity(0.8),
                                               borderRadius:
                                                   BorderRadius.circular(100),
                                             )
@@ -1188,5 +1200,68 @@ class WordListView extends GetView<WordListController> {
         ],
       ),
     );
+  }
+
+  Widget buildPlayList(BuildContext context) {
+    StudyController studyController = Get.find();
+    return ListView.builder(
+      itemCount: studyController.playingWords.length,
+      shrinkWrap: true,
+      padding: EdgeInsets.only(bottom: 50),
+      itemBuilder: (ctx, index) {
+        return ListTile(
+          title: Text(studyController.playingWords[index].word ?? ""),
+        );
+      },
+      physics: BouncingScrollPhysics(),
+    );
+  }
+
+  Widget buildPassList(BuildContext context) {
+    return Obx(() {
+      return ListView.builder(
+        itemCount: controller.passList.value.length,
+        shrinkWrap: true,
+        padding: EdgeInsets.only(bottom: 50),
+        itemBuilder: (ctx, index) {
+          return ListTile(
+            title: Text(controller.passList.value[index] ?? ""),
+          );
+        },
+        physics: BouncingScrollPhysics(),
+      );
+    });
+  }
+
+  Widget buildDeleteList(BuildContext context) {
+    return Obx(() {
+      return ListView.builder(
+        itemCount: controller.deleteList.value.length,
+        shrinkWrap: true,
+        padding: EdgeInsets.only(bottom: 50),
+        itemBuilder: (ctx, index) {
+          return ListTile(
+            title: Text(controller.deleteList.value[index] ?? ""),
+          );
+        },
+        physics: BouncingScrollPhysics(),
+      );
+    });
+  }
+
+  Widget buildAllList(BuildContext context) {
+    return Obx(() {
+      return ListView.builder(
+        itemCount: controller.allList.value.length,
+        shrinkWrap: true,
+        padding: EdgeInsets.only(bottom: 50),
+        itemBuilder: (ctx, index) {
+          return ListTile(
+            title: Text(controller.allList.value[index] ?? ""),
+          );
+        },
+        physics: BouncingScrollPhysics(),
+      );
+    });
   }
 }

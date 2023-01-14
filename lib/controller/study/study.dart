@@ -397,7 +397,7 @@ class StudyController extends GetxController with WidgetsBindingObserver {
   }
 
   Future<void> fetchCount() async {
-    var dailyCount = await wordDao.queryDailyPassWordCount(appService.bookId);
+    var dailyCount = await wordDao.queryDailyPassWordCount();
     dailyStudyCount.value = dailyCount ?? 0;
     var reviewCount = await wordDao.queryReviewWordCount();
     this.reviewCount.value = reviewCount ?? 0;

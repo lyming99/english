@@ -57,7 +57,7 @@ class HomeController extends GetxController {
     );
     var allCount = await wordDao.queryWordCount(appService.bookId);
     var progressCount = await wordDao.queryProgressWordCount(appService.bookId);
-    var dailyCount = await wordDao.queryDailyPassWordCount(appService.bookId);
+    var dailyCount = await wordDao.queryDailyPassWordCount();
     progress.value = "$progressCount/$allCount";
     dailyWordCount.value = dailyCount ?? 0;
     var reviewCount = await wordDao.queryReviewWordCount();

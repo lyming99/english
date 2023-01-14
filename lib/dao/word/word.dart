@@ -85,7 +85,7 @@ abstract class WordDao {
   }
 
   ///查询日常学习数量（进入周期一以上的单词，周期0删除不算，周期0删除代表本来就会的单词）
-  Future<int?> queryDailyPassWordCount(int wordBook) async {
+  Future<int?> queryDailyBookPassWordCount(int wordBook) async {
     var count = await queryAdapter.query(
         '''select count(0) as count from  word_status status
         left join  word word  on status.word = word.word
@@ -94,6 +94,37 @@ abstract class WordDao {
         ''',
         mapper: (Map<String, Object?> row) => row['count'] as int?,
         arguments: [wordBook]);
+    return count;
+  }
+  Future<List<String>> queryBookPassWord(int wordBook) async {
+    var wordList = await queryAdapter.queryList(
+        '''select word.word as word from  word_status status
+        left join  word word  on status.word = word.word
+         where word.book=?1 and (status.status=1 or status.studyCycle>0)
+        ''',
+        mapper: (Map<String, Object?> row) => row['word'] as String,
+        arguments: [wordBook]);
+    return wordList;
+  }
+  Future<List<String>> queryBookDeleteWord(int wordBook) async {
+    var wordList = await queryAdapter.queryList(
+        '''select word.word as word from  word_status status
+        left join  word word  on status.word = word.word
+         where word.book=?1 and status.status=-1
+        ''',
+        mapper: (Map<String, Object?> row) => row['word'] as String,
+        arguments: [wordBook]);
+    return wordList;
+  }
+
+  Future<int?> queryDailyPassWordCount() async {
+    var count = await queryAdapter.query(
+        '''select count(0) as count from  word_status status
+        left join  word word  on status.word = word.word
+         where (status.status=1 or (status.studyCycle>0 and status.status!=-1))
+         and createTime > ${getDayStartTime()}
+        ''',
+        mapper: (Map<String, Object?> row) => row['count'] as int?,);
     return count;
   }
 
