@@ -8,9 +8,9 @@
 
 **艾宾浩斯夸你会。**
 
-[B站学习视频](https://www.bilibili.com/video/BV1g24y1e7pt?share_source=copy_web)
+[哔哩哔哩-单词学习方法视频](https://www.bilibili.com/video/BV1g24y1e7pt?share_source=copy_web)
 
-[记忆方法升级-快播记忆法](https://www.bilibili.com/video/BV1NG4y1C7RA?share_source=copy_web)
+[记忆方法升级-快播记忆法视频](https://www.bilibili.com/video/BV1NG4y1C7RA?share_source=copy_web)
 
 ## 一、原理
 
