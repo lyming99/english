@@ -31,9 +31,13 @@ class WordListController extends GetxController {
         await app.appService.wordDao.queryBookDeleteWord(app.appService.bookId);
     this.deleteList.value =
         deleteList.map((e) => study.appService.getWord(e)?.word ?? "").toList();
-    WordService wordService = Get.find();
-    allList.value =
-        wordService.wordMap.values.map((e) => e.word ?? "").toList();
+    var allList =
+        await app.appService.wordDao.queryBookNotDeleteWord(app.appService.bookId);
+    var all =
+        allList.map((e) => study.appService.getWord(e)?.word ?? "").toList();
+    all.sort();
+    this.allList.value = all;
+
     onPageChanged(pageIndex.value);
   }
 
@@ -44,7 +48,6 @@ class WordListController extends GetxController {
 
   @override
   void onClose() {
-    print('word list on close.');
     super.onClose();
   }
 

@@ -116,6 +116,16 @@ abstract class WordDao {
         arguments: [wordBook]);
     return wordList;
   }
+  Future<List<String>> queryBookNotDeleteWord(int wordBook) async {
+    var wordList = await queryAdapter.queryList(
+        '''select word.word as word from  word_status status
+        left join  word word  on status.word = word.word
+         where word.book=?1 and status.status!=-1 or status.status is null
+        ''',
+        mapper: (Map<String, Object?> row) => row['word'] as String,
+        arguments: [wordBook]);
+    return wordList;
+  }
 
   Future<int?> queryDailyPassWordCount() async {
     var count = await queryAdapter.query(
