@@ -37,7 +37,7 @@ class WordView extends StatelessWidget {
               children: [
                 Text(
                   "${word?.word}",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 32,
                     color: Colors.deepOrangeAccent,
                     fontWeight: FontWeight.bold,
@@ -45,8 +45,8 @@ class WordView extends StatelessWidget {
                 ),
                 if (cycle > 0)
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                    margin: EdgeInsets.symmetric(horizontal: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                    margin: const EdgeInsets.symmetric(horizontal: 6),
                     decoration: BoxDecoration(
                       color: Colors.green.withOpacity(0.5),
                       // border: Border.all(color: Colors.blueGrey),
@@ -54,7 +54,7 @@ class WordView extends StatelessWidget {
                     ),
                     child: Text(
                       "复习$cycle",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 10,
                         color: Colors.white,
                       ),
@@ -78,11 +78,11 @@ class WordView extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.volume_down_outlined,
                             color: Colors.black54,
                           ),
-                          Text(
+                          const Text(
                             "英 ",
                             style: TextStyle(
                               fontSize: 16,
@@ -94,7 +94,7 @@ class WordView extends StatelessWidget {
                               MaxWidthText(
                                 text: "[${word?.ukVoice}]",
                                 maxLines: 1,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   color: Colors.black54,
                                 ),
@@ -112,15 +112,15 @@ class WordView extends StatelessWidget {
                       playWordSound(word?.word, 2);
                     },
                     child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
+                      margin: const EdgeInsets.symmetric(vertical: 5),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.volume_down_outlined,
                             color: Colors.black54,
                           ),
-                          Text(
+                          const Text(
                             "美 ",
                             style: TextStyle(
                               fontSize: 16,
@@ -130,7 +130,7 @@ class WordView extends StatelessWidget {
                           MaxWidthText(
                             text: "[${word?.usaVoice}]",
                             maxLines: 1,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
                             ),
@@ -148,8 +148,8 @@ class WordView extends StatelessWidget {
             LayoutBuilder(builder: (context, cons) {
               return Container(
                 width: cons.maxWidth,
-                margin: EdgeInsets.only(top: 16),
-                padding: EdgeInsets.all(10),
+                margin: const EdgeInsets.only(top: 16),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6),
                   boxShadow: [
@@ -170,33 +170,26 @@ class WordView extends StatelessWidget {
           if (showDetail)
             LayoutBuilder(builder: (context, cons) {
               return Container(
-                margin: EdgeInsets.only(top: 16),
+                margin: const EdgeInsets.only(top: 16),
                 width: cons.maxWidth,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    // BoxShadow(
-                    //     blurRadius: 10,
-                    //     blurStyle: BlurStyle.outer,
-                    //     color: Colors.grey.withOpacity(0.2))
-                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      child: InkWell(
-                        onTap: () {
-                          playSentenceSound(word?.sentence ?? "");
-                        },
-                        child: WordSentence(
-                          sentence: word?.sentence,
-                          // showVoice: true,
-                        ),
+                    InkWell(
+                      onTap: () {
+                        playSentenceSound(word?.sentence ?? "",
+                            cacheName: word?.wordId ?? word?.word);
+                      },
+                      child: WordSentence(
+                        sentence: word?.sentence,
+                        // showVoice: true,
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(
+                      margin: const EdgeInsets.only(
                         top: 10,
                       ),
                       child: WordSentence(

@@ -18,6 +18,7 @@ class AppService {
   var wordDao = Get.find<WordDao>();
   var queueCount = 4;
   int dailyWantCount = 100;
+  bool autoPass = false;
   String? _bookName;
 
   String get bookName {
@@ -111,6 +112,7 @@ class AppService {
     storage.write("study.readWaitTime", readWaitTime);
     storage.write("study.queueCount", queueCount);
     storage.write("study.bookName", bookName);
+    storage.write("study.autoPass", autoPass ? "true" : "false");
     storage.save();
   }
 
@@ -140,14 +142,70 @@ class AppService {
     _bookName = storage.read(
       "study.bookName",
     );
+    var autoPass = storage.read("autoPass");
+    this.autoPass = autoPass.toString() == "true";
   }
 
+  ///通过单词id获取单词数据
   Word? getWord(String? id) {
     return wordService.wordMap[id];
+  }
+
+  Word? getWordBySpell(String? spell) {
+    var find = wordService.wordMap.values
+        .firstWhere((element) => element.word == spell, orElse: () {
+      return Word();
+    });
+    if (find.id == null) {
+      return null;
+    }
+    return find;
+  }
+
+  WordVO? toWordVO(Word? word) {
+    if (word != null) {
+      return WordVO(
+        wordId: word.id,
+        word: word.word,
+        usaVoice: word.usVoice,
+        ukVoice: word.ukVoice,
+        means: word.means?.split("\n"),
+        sentence: () {
+          var len = word.sentences?.length ?? 0;
+          if (len > 0) {
+            return word.sentences?[0].sentence;
+          }
+        }(),
+        sentenceMeans: () {
+          var len = word.sentences?.length ?? 0;
+          if (len > 0) {
+            return word.sentences?[0].sentenceCn;
+          }
+        }(),
+      );
+    }
+    return null;
   }
 
   void selectBook(String bookName) {
     _bookName = bookName;
     saveOptions();
+  }
+
+  /// 查询单词是否删除: -1为删除，null或者其它状态为为删除
+  Future<bool?> queryWordDeleteStatus(String? word) async {
+    var status = await wordDao.queryWordStatus(word ?? "");
+    var statusFlag = status?.status;
+    return statusFlag == -1;
+  }
+
+  /// 删除单词：设为熟词
+  Future<void> deleteWord(String? wordId) async {
+    await wordDao.upsetWordStatusById(wordId, -1);
+  }
+
+  /// 恢复单词：重新学习
+  Future<void> restoreWord(String? wordId) async {
+    await wordDao.upsetWordStatusById(wordId, 0);
   }
 }

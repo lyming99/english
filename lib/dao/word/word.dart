@@ -59,6 +59,18 @@ abstract class WordDao {
   @update
   Future<int> updateStatus(WordStatusPO status);
 
+  /// 根据wordId更新单词状态：0学习中 -1删除 1已学习
+  Future<void> upsetWordStatusById(String? wordId, int status) async {
+    var wordStatus = await queryWordStatus(wordId ?? '');
+    if (wordStatus == null) {
+      await createWordStatus(WordStatusPO(word: wordId, status: status));
+      return;
+    }
+    await queryAdapter.queryNoReturn('''
+    update word_status set status=?1 where word=?2
+    ''', arguments: [status, wordId ?? '']);
+  }
+
   @Query('''
   select * from word_status 
   ''')
@@ -96,6 +108,7 @@ abstract class WordDao {
         arguments: [wordBook]);
     return count;
   }
+
   Future<List<String>> queryBookPassWord(int wordBook) async {
     var wordList = await queryAdapter.queryList(
         '''select word.word as word from  word_status status
@@ -106,6 +119,7 @@ abstract class WordDao {
         arguments: [wordBook]);
     return wordList;
   }
+
   Future<List<String>> queryBookDeleteWord(int wordBook) async {
     var wordList = await queryAdapter.queryList(
         '''select word.word as word from  word_status status
@@ -116,11 +130,13 @@ abstract class WordDao {
         arguments: [wordBook]);
     return wordList;
   }
+
+  /// 查询选择书本所有未删除单词(-1代表删除)
   Future<List<String>> queryBookNotDeleteWord(int wordBook) async {
     var wordList = await queryAdapter.queryList(
-        '''select word.word as word from  word_status status
-        left join  word word  on status.word = word.word
-         where word.book=?1 and status.status!=-1 or status.status is null
+        '''select word.word as word from  word word
+        left join  word_status status  on status.word = word.word
+         where word.book=?1 and (status.status!=-1 or status.status is null)
         ''',
         mapper: (Map<String, Object?> row) => row['word'] as String,
         arguments: [wordBook]);
@@ -129,12 +145,13 @@ abstract class WordDao {
 
   Future<int?> queryDailyPassWordCount() async {
     var count = await queryAdapter.query(
-        '''select count(distinct word.word) as count from  word_status status
+      '''select count(distinct word.word) as count from  word_status status
         left join  word word  on status.word = word.word
          where (status.status=1 or (status.studyCycle>0 and status.status!=-1))
          and createTime > ${getDayStartTime()}
         ''',
-        mapper: (Map<String, Object?> row) => row['count'] as int?,);
+      mapper: (Map<String, Object?> row) => row['count'] as int?,
+    );
     return count;
   }
 

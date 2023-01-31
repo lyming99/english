@@ -27,7 +27,6 @@ class StudyService {
         if (word.word == null) {
           continue;
         }
-
         var status = await wordDao.queryWordStatus(word.word!);
         if (status != null) {
           status.status = 0;
@@ -41,7 +40,7 @@ class StudyService {
         await wordDao.queryDailyStudyCount(appService.bookId) ?? 0;
     var dailyWantCount=appService.dailyWantCount;
     if(dailyWantCount==-1) {
-      dailyWantCount = 100000;
+      dailyWantCount = 1000000;
     }
     if (studyCount < dailyWantCount) {
       if (studying.length < studyQueueMaxCount) {

@@ -67,11 +67,12 @@ Future<Duration?> playWordSound(
   // var player = AudioPlayer();
   // await player.play(UrlSource(url),volume: 1);
   // await player.play(DeviceFileSource(file.path),volume: 1);
-  return await playSentenceSound(word,type: type??1);
+  return await playSentenceSound(word, type: type ?? 1);
 }
 
 Future<Duration?> playSentenceSound(
   String? sentence, {
+  String? cacheName,
   int type = 2,
   String le = "eng",
 }) async {
@@ -79,15 +80,17 @@ Future<Duration?> playSentenceSound(
   sentence = sentence.replaceAll("</b>", "");
   sentence = sentence.replaceAll("<b>", "");
   sentence = Uri.encodeComponent(sentence);
+  cacheName ??= sentence;
   var url =
-      "https://dict.youdao.com/dictvoice?audio=${sentence}&type=$type&le=$le";
+      "https://dict.youdao.com/dictvoice?audio=$sentence&type=$type&le=$le";
   var tempDir = await getApplicationSupportDirectory();
   Directory("${tempDir.path}/sentenceVoice").createSync();
-  var file = File("${tempDir.path}/sentenceVoice/$sentence$type");
+  var file = File("${tempDir.path}/sentenceVoice/${cacheName}_$type.mp3");
   if (!file.existsSync()) {
     await Dio().download(url, file.path);
   }
   await player.play(DeviceFileSource(file.path));
+  return null;
 }
 
 void stopPlaySound() {

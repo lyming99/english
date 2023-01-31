@@ -24,6 +24,9 @@ class WordVO {
 
   String? helper;
 
+  ///熟词(删除)
+  bool? isDelete;
+
   WordVO({
     this.wordId,
     this.word,

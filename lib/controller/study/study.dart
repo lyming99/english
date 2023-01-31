@@ -22,6 +22,8 @@ typedef Future<void> PlayCallback(Player player);
 class Player {
   bool _start = false;
   bool _playing = false;
+
+  /// 显示时间,单位: 秒
   int showTime;
   int thinkTime;
   int startTime = DateTime.now().millisecondsSinceEpoch;
@@ -164,6 +166,13 @@ class StudyController extends GetxController with WidgetsBindingObserver {
   //循环队列数量
   var queueCount = 4.obs;
 
+  var autoPass = false.obs;
+
+  var playCount = <String, int>{};
+
+  // 鸡块旋转。。。
+  get autoRotating => false;
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -206,6 +215,11 @@ class StudyController extends GetxController with WidgetsBindingObserver {
     thinkWaitTime.value = appService.thinkWaitTime;
     readWaitTime.value = appService.readWaitTime;
     queueCount.value = appService.queueCount;
+    autoPass.value = appService.autoPass;
+    autoPass.listen((value) {
+      appService.autoPass = value;
+      appService.saveOptions();
+    });
     dailyWantCount.listen((value) {
       appService.dailyWantCount = value;
       appService.saveOptions();
@@ -297,6 +311,19 @@ class StudyController extends GetxController with WidgetsBindingObserver {
           wordStatus.value = null;
           stopPlay();
         }
+        //重设
+        player.showTime = readWaitTime.value;
+        //如果是复习状态，并且是自动pass状态，则减少showTime
+        var cycle = player.wordStatus?.studyCycle;
+        if (cycle != null && readWaitTime.value > 0) {
+          if (cycle >= 1) {
+            // 复习轮数越高，复习时间越短
+            player.showTime = (readWaitTime.value * (1 - cycle / 8)).toInt();
+            if (player.showTime < 1) {
+              player.showTime = 1;
+            }
+          }
+        }
       },
       thinkEnd: (Player player) async {
         thinking.value = false;
@@ -305,6 +332,19 @@ class StudyController extends GetxController with WidgetsBindingObserver {
         //显示释义
       },
       showEnd: (Player player) async {
+        if (appService.autoPass == true) {
+          var key = player.wordStatus?.word ?? "";
+          var wordPlayCount = playCount[key] ?? 0;
+          wordPlayCount++;
+          playCount[key] = wordPlayCount;
+          var cycle = player.wordStatus?.studyCycle ?? 0;
+          //循环次数减少
+          if (wordPlayCount > 3 ||
+              (cycle == 1 && wordPlayCount == 2) ||
+              cycle > 1) {
+            return;
+          }
+        }
         playingIndex++;
         if (playingIndex >= playingWords.length) {
           playingIndex = 0;
@@ -319,6 +359,17 @@ class StudyController extends GetxController with WidgetsBindingObserver {
         if (status != null) {
           studyService.addWordStudyRecord(
               startTime, endTime, player.playComplete, status);
+        }
+        if (appService.autoPass == true) {
+          var key = player.wordStatus?.word ?? "";
+          var wordPlayCount = playCount[key] ?? 0;
+          var cycle = player.wordStatus?.studyCycle ?? 0;
+          if (wordPlayCount > 3 ||
+              (cycle == 1 && wordPlayCount == 2) ||
+              cycle > 1) {
+            playCount[key] = 0;
+            pass();
+          }
         }
       },
     );
@@ -388,6 +439,16 @@ class StudyController extends GetxController with WidgetsBindingObserver {
     controlEnable.value = true;
   }
 
+  /// 从播放列表删除单词
+  Future<void> deleteByWord(String? word) async {
+    var wordIndex = playingWords.indexWhere((element) => element.word == word);
+    if (wordIndex == -1) {
+      return;
+    }
+    await fetchNextWord(wordIndex);
+    await fetchCount();
+  }
+
   void togglePlay() async {
     if (playing.value) {
       await stopPlay();
@@ -413,5 +474,4 @@ class StudyController extends GetxController with WidgetsBindingObserver {
       wordStatus.value = await wordDao.queryWordStatus(word.wordId ?? "");
     }
   }
-
 }

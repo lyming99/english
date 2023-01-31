@@ -39,14 +39,14 @@ dependencies:
   get_storage: ^2.0.3
   adaptive_dialog: ^1.6.3
 #  flutter_sound: ^9.2.13
-  audioplayers: ^1.0.0
+  audioplayers: ^2.0.0
   path_provider: ^2.0.11
   dio: ^4.0.6
   sqflite: ^2.0.2+1
   wakelock: ^0.6.1+2
   bottom_picker: ^1.9.1
 #  audioplayers: ^1.0.0
-  just_audio: ^0.9.27
+#  just_audio: ^0.9.27
   encrypt: ^5.0.1
   archive: ^3.3.0
   bottom_sheet: ^3.0.0
@@ -84,6 +84,7 @@ flutter:
     - assets/img/home/head.png
     - assets/dict.db
     - assets/dict.db1
+    - assets/img/chicken.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

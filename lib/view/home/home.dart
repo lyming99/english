@@ -15,7 +15,7 @@ class HomeView extends GetView<HomeController> {
       systemNavigationBarColor: Colors.transparent,
     ));
     return Scaffold(
-      body: buildStudyPage(context),
+      body: SingleChildScrollView(child: buildStudyPage(context)),
     );
   }
 
