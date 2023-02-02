@@ -24,8 +24,13 @@ void main() async {
 
   await GetStorage.init();
   var path = await sqfliteDatabaseFactory.getDatabasePath("english.db");
-
-  if((await File(path).length()<100000)||!File(path).existsSync()) {
+  path = path.replaceAll("\\", "/");
+  var index = path.lastIndexOf("/");
+  var dbDir = Directory(path.substring(0, index));
+  if (!dbDir.existsSync()) {
+    dbDir.createSync(recursive: true);
+  }
+  if ((!File(path).existsSync() || await File(path).length() < 100000)) {
     await releaseAssetsToFile("assets/dict.db1", File(path));
   }
   var appDatabase =

@@ -26,7 +26,7 @@ class AppService {
   }
 
   String getBookId(String? bookName) {
-    return wordService.bookMap[bookName]?.id ?? "1";
+    return wordService.bookMap[bookName]?.id ?? "2";
   }
 
   int get bookId {
