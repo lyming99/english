@@ -274,6 +274,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.0.6"
+  dotted_line:
+    dependency: "direct main"
+    description:
+      name: dotted_line
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.1.0"
   dynamic_color:
     dependency: transitive
     description:

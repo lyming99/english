@@ -97,6 +97,21 @@ class WordListController extends GetxController {
     return wordService.toWordVO(wordService.getWordBySpell(word));
   }
 
+  /// 根据单词含义搜索单词
+  bool isContainsMeans(String word,String meansText){
+    var wordVo = getWordVO(word);
+    var means = wordVo?.means;
+    if(means!=null) {
+      for (var mean in means) {
+        var contains = mean.toString().toLowerCase().contains(meansText.toLowerCase());
+        if(contains){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   /// 设为熟词：删除单词
   Future<void> deleteWord(WordVO word) async {
     AppService wordService = Get.find();

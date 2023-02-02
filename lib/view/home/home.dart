@@ -181,7 +181,7 @@ class HomeView extends GetView<HomeController> {
             Obx(() {
               return Container(
                 height: 80,
-                margin: EdgeInsets.only(left: 20,right: 10),
+                margin: EdgeInsets.only(left: 20, right: 10),
                 child: FittedBox(
                   child: controller.bookIcon.value,
                 ),
@@ -340,19 +340,43 @@ class HomeView extends GetView<HomeController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      top: 20,
-                      bottom: 10,
-                    ),
-                    child: const Text(
-                      "今日情况",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
+                  //标题
+                  Stack(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(
+                          left: 20,
+                          right: 20,
+                          top: 20,
+                          bottom: 10,
+                        ),
+                        child: const Text(
+                          "今日情况",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      // 详情按钮
+                      // Align(
+                      //   alignment: Alignment.topRight,
+                      //   child: Container(
+                      //     margin: EdgeInsets.symmetric(
+                      //       vertical: 20,
+                      //       horizontal: 20,
+                      //     ),
+                      //     child: TextButton(
+                      //       onPressed: () {
+                      //         Get.toNamed("/statistic");
+                      //       },
+                      //       child: const Text(
+                      //         "详情 >",
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
                   ),
+
                   //数据统计
                   Container(
                     padding: const EdgeInsets.only(

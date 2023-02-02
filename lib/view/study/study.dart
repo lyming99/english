@@ -19,6 +19,167 @@ import '../../util/theme.dart';
 import '../word/word.dart';
 
 class StudyPage extends GetView<StudyController> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        titleSpacing: 0,
+        leading: IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+            )),
+        title: Text(
+          "学习",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.normal,
+            color: Colors.black,
+          ),
+        ),
+        centerTitle: true,
+        systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
+          statusBarColor: Colors.transparent,
+        ),
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        foregroundColor: Colors.black,
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.help_outline,
+              )),
+        ],
+      ),
+      body: SafeArea(
+        child: Obx(() {
+          return controller.word.value == null
+              ? buildEndView(context)
+              : buildWordView(context);
+        }),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              blurStyle: BlurStyle.outer,
+              blurRadius: 1,
+              color: Colors.grey.withOpacity(0.2),
+            )
+          ],
+        ),
+        child: SafeArea(
+          child: Container(
+            height: 60,
+            child: Obx(() {
+              return Stack(
+                children: [
+                  if (controller.word.value != null)
+                    Container(
+                      alignment: Alignment.center,
+                      child: Row(
+                        // mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding:
+                            const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: InkWell(
+                                onTap: () {
+                                  controller.previous();
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Icon(
+                                    Icons.fast_rewind_rounded,
+                                    size: 32,
+                                    color: Colors.black87,
+                                  ),
+                                )),
+                          ),
+                          Padding(
+                            padding:
+                            const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: InkWell(
+                                onTap:
+                                controller.playButtonEnable.value == false
+                                    ? null
+                                    : () {
+                                  controller.togglePlay();
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Icon(
+                                    controller.playing.value
+                                        ? Icons.pause_outlined
+                                        : Icons.play_arrow_rounded,
+                                    size: 32,
+                                    color: Colors.black87,
+                                  ),
+                                )),
+                          ),
+                          Padding(
+                            padding:
+                            const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: InkWell(
+                                onTap: () {
+                                  //下一个
+                                  controller.next();
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Icon(
+                                    Icons.fast_forward_rounded,
+                                    size: 28,
+                                    color: Colors.black87,
+                                  ),
+                                )),
+                          ),
+                        ],
+                      ),
+                    ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: IconButton(
+                          onPressed: () {
+                            showOptions(context);
+                          },
+                          icon: Icon(
+                            Icons.av_timer,
+                            size: 32,
+                          )),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: IconButton(
+                          onPressed: () {
+                            showWordListBottomSheet(context);
+                          },
+                          icon: Icon(
+                            Icons.list,
+                            size: 32,
+                          )),
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget buildWordContent(BuildContext context) {
     return Stack(
       children: [
@@ -261,165 +422,6 @@ class StudyPage extends GetView<StudyController> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0,
-        leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-            )),
-        title: Text(
-          "学习",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.normal,
-            color: Colors.black,
-          ),
-        ),
-        centerTitle: true,
-        systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
-          statusBarColor: Colors.transparent,
-        ),
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        foregroundColor: Colors.black,
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.help_outline,
-              )),
-        ],
-      ),
-      body: SafeArea(
-        child: Obx(() {
-          return controller.word.value == null
-              ? buildEndView(context)
-              : buildWordView(context);
-        }),
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              blurStyle: BlurStyle.outer,
-              blurRadius: 1,
-              color: Colors.grey.withOpacity(0.2),
-            )
-          ],
-        ),
-        child: SafeArea(
-          child: Container(
-            height: 60,
-            child: Obx(() {
-              return Stack(
-                children: [
-                  if (controller.word.value != null)
-                    Container(
-                      alignment: Alignment.center,
-                      child: Row(
-                        // mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: InkWell(
-                                onTap: () {
-                                  controller.previous();
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: Icon(
-                                    Icons.fast_rewind_rounded,
-                                    size: 32,
-                                    color: Colors.black87,
-                                  ),
-                                )),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: InkWell(
-                                onTap:
-                                    controller.playButtonEnable.value == false
-                                        ? null
-                                        : () {
-                                            controller.togglePlay();
-                                          },
-                                child: Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: Icon(
-                                    controller.playing.value
-                                        ? Icons.pause_outlined
-                                        : Icons.play_arrow_rounded,
-                                    size: 32,
-                                    color: Colors.black87,
-                                  ),
-                                )),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: InkWell(
-                                onTap: () {
-                                  //下一个
-                                  controller.next();
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: Icon(
-                                    Icons.fast_forward_rounded,
-                                    size: 28,
-                                    color: Colors.black87,
-                                  ),
-                                )),
-                          ),
-                        ],
-                      ),
-                    ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: IconButton(
-                          onPressed: () {
-                            showOptions(context);
-                          },
-                          icon: Icon(
-                            Icons.av_timer,
-                            size: 32,
-                          )),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: IconButton(
-                          onPressed: () {
-                            showWordListBottomSheet(context);
-                          },
-                          icon: Icon(
-                            Icons.list,
-                            size: 32,
-                          )),
-                    ),
-                  ),
-                ],
-              );
-            }),
-          ),
-        ),
-      ),
-    );
-  }
 
   Future<void> showOptions(BuildContext context) async {
     var playing = controller.playing.value;
@@ -1494,10 +1496,11 @@ class WordListView extends GetView<WordListController> {
 
   Widget buildAllList(BuildContext context) {
     return Obx(() {
+      //搜索单词
       var wordFilterList = controller.allList.value
           .where((element) => element
               .toLowerCase()
-              .contains(controller.wordSearchText.toLowerCase()))
+              .contains(controller.wordSearchText.toLowerCase())||controller.isContainsMeans(element,controller.wordSearchText.value))
           .toList();
       return Column(
         children: [
