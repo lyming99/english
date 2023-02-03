@@ -3,10 +3,7 @@ import 'dart:typed_data';
 
 import 'package:english/dao/word/word.dart';
 import 'package:english/dicts/reader.dart';
-import 'package:english/dicts/relation.dart';
 import 'package:english/service/word/word.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
