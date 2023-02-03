@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+// import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
 import '../../controller/study/study.dart';
@@ -1113,7 +1114,7 @@ class StudyPage extends GetView<StudyController> {
       controller.stopPlay();
     }
     Get.put(WordListController());
-    await showMaterialModalBottomSheet(
+    await showMaterialModalBottomSheet<String>(
         context: context,
         expand: true,
         bounce: false,
@@ -1239,26 +1240,32 @@ class WordListView extends GetView<WordListController> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               for (var i = 0; i < 4; i++)
-                                Container(
-                                  width: 10,
-                                  height: 10,
-                                  margin: EdgeInsets.symmetric(
-                                    horizontal: 5,
-                                    vertical: 30,
+                                GestureDetector(
+                                  onTap: (){
+                                    controller.pageController.jumpToPage(i);
+                                  },
+                                  behavior: HitTestBehavior.translucent,
+                                  child: Container(
+                                    width: 10,
+                                    height: 10,
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal: 5,
+                                      vertical: 30,
+                                    ),
+                                    decoration: controller.pageIndex.value == i
+                                        ? BoxDecoration(
+                                            color: Colors.grey.withOpacity(0.8),
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                          )
+                                        : BoxDecoration(
+                                            border: Border.all(
+                                                color:
+                                                    Colors.grey.withOpacity(0.8)),
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                          ),
                                   ),
-                                  decoration: controller.pageIndex.value == i
-                                      ? BoxDecoration(
-                                          color: Colors.grey.withOpacity(0.8),
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                        )
-                                      : BoxDecoration(
-                                          border: Border.all(
-                                              color:
-                                                  Colors.grey.withOpacity(0.8)),
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                        ),
                                 )
                             ],
                           ),
@@ -1499,7 +1506,7 @@ class WordListView extends GetView<WordListController> {
       //搜索单词
       var wordFilterList = controller.allList.value
           .where((element) => element
-              .toLowerCase()
+              .word!.toLowerCase()
               .contains(controller.wordSearchText.toLowerCase())||controller.isContainsMeans(element,controller.wordSearchText.value))
           .toList();
       return Column(
@@ -1518,7 +1525,7 @@ class WordListView extends GetView<WordListController> {
                 /// 1、点击单词显示详情：对话框？下拉？
                 /// 2、点击菜单按钮，显示下拉删除单词、恢复单词按钮
                 /// 3、单词释义显示
-                var word = controller.getWordVO(wordFilterList[index]);
+                var word = wordFilterList[index];
                 return buildWordTile(context, word,
                     wordStatusUpdateCallback: () {
                   reFetchWordList(word: word);

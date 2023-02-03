@@ -158,7 +158,9 @@ class AppService {
     }
     return find;
   }
-
+  WordVO? getWordVO(String? id) {
+    return toWordVO(wordService.wordMap[id]);
+  }
   WordVO? toWordVO(Word? word) {
     if (word != null) {
       return WordVO(

@@ -15,7 +15,7 @@ class WordListController extends GetxController {
   var title = "播放列表".obs;
   var passList = Rx(<String>[]);
   var deleteList = Rx(<String>[]);
-  var allList = Rx(<String>[]);
+  var allList = Rx(<WordVO>[]);
 
   var wordSearchText = "".obs;
   @override
@@ -38,8 +38,7 @@ class WordListController extends GetxController {
     var allList = await app.appService.wordDao
         .queryBookNotDeleteWord(app.appService.bookId);
     var all =
-        allList.map((e) => study.appService.getWord(e)?.word ?? "").toList();
-    all.sort();
+        allList.map((e) => study.appService.getWordVO(e)!).toList();
     this.allList.value = all;
   }
 
@@ -98,9 +97,8 @@ class WordListController extends GetxController {
   }
 
   /// 根据单词含义搜索单词
-  bool isContainsMeans(String word,String meansText){
-    var wordVo = getWordVO(word);
-    var means = wordVo?.means;
+  bool isContainsMeans(WordVO?word,String meansText){
+    var means = word?.means;
     if(means!=null) {
       for (var mean in means) {
         var contains = mean.toString().toLowerCase().contains(meansText.toLowerCase());

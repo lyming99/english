@@ -50,7 +50,7 @@ dependencies:
   encrypt: ^5.0.1
   archive: ^3.3.0
   bottom_sheet: ^3.0.0
-  modal_bottom_sheet: ^2.0.1
+  modal_bottom_sheet: ^2.1.2
   cryptography: ^2.0.5
   expandable_bottom_sheet: ^1.1.1+1
   sliding_sheet: ^0.5.2

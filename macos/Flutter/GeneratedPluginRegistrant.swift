@@ -8,7 +8,7 @@ import Foundation
 import audioplayers_darwin
 import dynamic_color
 import macos_ui
-import path_provider_macos
+import path_provider_foundation
 import sqflite
 import wakelock_macos
 
